@@ -21,13 +21,6 @@ public class PlayerController : MonoBehaviour
 		rigidBody = GetComponent<Rigidbody>();
 		myTransform = transform;
 		animator = myTransform.FindChild("PlayerModel").GetComponent<Animator>();
-		//string[] jnames = Input.GetJoystickNames();
-		//if (jnames.Length > 0)
-		//{
-		//	Debug.Log(jnames.Length);
-		//	Debug.Log(jnames[0]);
-		//	Debug.Log(jnames[1]);
-		//}
 	}
 
 	void Update()
@@ -87,11 +80,8 @@ public class PlayerController : MonoBehaviour
 	{
 		if (bombPrefab)
 		{
-			GameObject recentBomb = Instantiate(bombPrefab, new Vector3(
-				myTransform.position.x,
-				bombPrefab.transform.position.y, 
-				myTransform.position.z),
-				bombPrefab.transform.rotation);
+			Vector3 position = new Vector3(Mathf.RoundToInt(myTransform.position.x), 0.5f, Mathf.RoundToInt(myTransform.position.z));
+			GameObject recentBomb = Instantiate(bombPrefab, position, bombPrefab.transform.rotation);
 		}
 	}
 

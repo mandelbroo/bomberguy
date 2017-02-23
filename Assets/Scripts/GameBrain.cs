@@ -24,7 +24,7 @@ public class GameBrain : MonoBehaviour {
 		for (int i = 0; i < 14; i++)
 			for (int x = 0; x < 10; x++)
 				if (i % 2 == 0 && x % 2 == 0)
-					Instantiate(prefab, new Vector3(i + 1.5f, 0.5f, -x + -1.5f), Quaternion.identity);
+					Instantiate(prefab, new Vector3(i + 1f, 0.5f, -x + -1f), Quaternion.identity);
 	}
 
 	void PlaceBoxes()
@@ -33,7 +33,7 @@ public class GameBrain : MonoBehaviour {
 		for (int i = 0; i < 15; i++)
 			for (int x = 0; x < 11; x++)
 				if ((x % 2 == 0 || i % 2 == 0) && TrueOrFalse())
-					Instantiate(prefab, new Vector3(i + 0.5f, 0.5f, -x + -0.5f), Quaternion.identity);
+					Instantiate(prefab, new Vector3(i, 0.5f, -x), Quaternion.identity);
 	}
 
 	bool TrueOrFalse()
