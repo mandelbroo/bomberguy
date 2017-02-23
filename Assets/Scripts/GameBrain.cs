@@ -5,10 +5,12 @@ using System;
 
 public class GameBrain : MonoBehaviour {
 
+	public bool showBoxes = true;
+
 	// Use this for initialization
 	void Start () {
-		//BuildWalls();
-		//PlaceBoxes();
+		if (showBoxes)
+			PlaceBoxes();
 	}
 	
 	// Update is called once per frame
