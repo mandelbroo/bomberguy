@@ -18,9 +18,13 @@ public class PlayerController : MonoBehaviour
 	
 	void Start()
 	{
-		rigidBody = GetComponent<Rigidbody>();
-		myTransform = transform;
-		animator = myTransform.FindChild("PlayerModel").GetComponent<Animator>();
+		gameObject.SetActive(active);
+		if (active)
+		{
+			rigidBody = GetComponent<Rigidbody>();
+			myTransform = transform;
+			animator = myTransform.FindChild("PlayerModel").GetComponent<Animator>();
+		}
 	}
 
 	void Update()
