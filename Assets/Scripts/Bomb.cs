@@ -4,37 +4,9 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour {
 
-	private IEnumerator CreateExplosions(Vector3 direction)
-	{
-		//1
-		for (int i = 1; i < 3; i++)
-		{
-			//2
-			RaycastHit hit;
-			//3
-			Physics.Raycast(transform.position + new Vector3(0, .5f, 0), direction, out hit, i, levelMask);
-
-			//4
-			if (!hit.collider)
-			{
-				Instantiate(explosionPrefab, transform.position + (i * direction),
-				  //5 
-				  explosionPrefab.transform.rotation);
-				//6
-			}
-			else
-			{
-				//7
-				break;
-			}
-
-			//8
-			yield return new WaitForSeconds(.05f);
-		}
-	}
-
 	public GameObject explosionPrefab;
 	public LayerMask levelMask;
+	private bool exploded = false;
 
 	void Start () {
 		Invoke("Explode", 3f);
@@ -44,17 +16,51 @@ public class Bomb : MonoBehaviour {
 		
 	}
 
+	private IEnumerator CreateExplosions(Vector3 direction)
+	{
+		for (int i = 1; i < 3; i++)
+		{ //The 3 here dictates how far the raycasts will check, in this case 3 tiles far
+			RaycastHit hit; //Holds all information about what the raycast hits
+
+			Physics.Raycast(transform.position + new Vector3(0, .5f, 0), direction, out hit, i, levelMask); //Raycast in the specified direction at i distance, because of the layer mask it'll only hit blocks, not players or bombs
+
+			if (!hit.collider)
+			{ // Free space, make a new explosion
+				Instantiate(explosionPrefab, transform.position + (i * direction), explosionPrefab.transform.rotation);
+			}
+			else
+			{ //Hit a block, stop spawning in this direction
+				break;
+			}
+			yield return new WaitForSeconds(.05f); //Wait 50 milliseconds before checking the next location
+		}
+
+	}
+
 	void Explode()
 	{
-		Instantiate(explosionPrefab, transform.position, Quaternion.identity); //1
+		Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
 		StartCoroutine(CreateExplosions(Vector3.forward));
 		StartCoroutine(CreateExplosions(Vector3.right));
 		StartCoroutine(CreateExplosions(Vector3.back));
 		StartCoroutine(CreateExplosions(Vector3.left));
 
-		GetComponent<MeshRenderer>().enabled = false; //2
-		transform.FindChild("Collider").gameObject.SetActive(false); //3
-		Destroy(gameObject, .3f); //4
+		GetComponent<MeshRenderer>().enabled = false;
+		exploded = true;
+		Transform collider = transform.FindChild("Collider");
+		if (collider)
+			collider.gameObject.SetActive(false);
+		Destroy(gameObject, .3f);
+	}
+
+	public void OnTriggerEnter(Collider other)
+	{
+
+		if (!exploded && other.CompareTag("Explosion"))
+		{
+			CancelInvoke("Explode");
+			Explode();
+		}
 	}
 }
