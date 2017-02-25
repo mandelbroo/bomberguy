@@ -6,7 +6,8 @@ public class Bomb : MonoBehaviour {
 
 	public GameObject explosionPrefab;
 	public LayerMask levelMask;
-	private bool exploded = false;
+	public bool explode = true;
+	private bool _exploded = false;
 
 	void Start () {
 		Invoke("Explode", 3f);
@@ -39,6 +40,8 @@ public class Bomb : MonoBehaviour {
 
 	void Explode()
 	{
+		if (!explode) return;
+
 		Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
 		StartCoroutine(CreateExplosions(Vector3.forward));
@@ -47,7 +50,7 @@ public class Bomb : MonoBehaviour {
 		StartCoroutine(CreateExplosions(Vector3.left));
 
 		GetComponent<MeshRenderer>().enabled = false;
-		exploded = true;
+		_exploded = true;
 		Transform collider = transform.FindChild("Collider");
 		if (collider)
 			collider.gameObject.SetActive(false);
@@ -56,7 +59,7 @@ public class Bomb : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (!exploded && other.CompareTag("Explosion"))
+		if (!_exploded && other.CompareTag("Explosion"))
 		{
 			CancelInvoke("Explode");
 			Explode();
