@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-	//Player parameters
 	[Range(1, 8)] //Enables a nifty slider in the editor
 	public int playerNumber = 1;
-	public bool canDropBombs = true; //Can the player drop bombs?
-	public bool canMove = true; //Can the player move?
-	public GameObject bombPrefab;
+	public bool canDropBombs = true;
+	public bool canMove = true;
 	public float moveSpeed = 5f;
 	public bool active = true;
+	public bool dead = false;
+	public GameObject bombPrefab;
+	public GlobalStateManager GlobalManager;
 
 	private Animator animator;
 	private Rigidbody rigidBody;
@@ -30,6 +31,17 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		UpdateMovement();
+	}
+
+	public void OnTriggerEnter(Collider other)
+	{
+		if (!dead && other.CompareTag("Explosion"))
+		{
+			Debug.Log("P" + playerNumber + " hit by explosion!");
+			dead = true;
+			GlobalManager.PlayerDied(playerNumber);
+			Destroy(gameObject);
+		}
 	}
 
 	void UpdateMovement()
