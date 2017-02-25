@@ -4,27 +4,37 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	[Range(1, 8)] //Enables a nifty slider in the editor
-	public int playerNumber = 1;
-	public bool canDropBombs = true;
-	public bool canMove = true;
-	public float moveSpeed = 5f;
-	public bool active = true;
-	public bool dead = false;
-	public GameObject bombPrefab;
+	public int PlayerNumber = 1;
+	public bool CanDropBombs = true;
+	public bool CanDie = true;
+	public bool CanMove = true;
+	public float MoveSpeed = 5f;
+	public bool Active = true;
+	public bool Dead;
+	public GameObject BombPrefab;
 	public GlobalStateManager GlobalManager;
 
-	private Animator animator;
-	private Rigidbody rigidBody;
-	private Transform myTransform;
-	
+	private Animator _animator;
+	private Collider _collider;
+	private Transform _myTransform;
+	private GameObject _recentBomb;
+	private Rigidbody _rigidBody;
+
+	public Collider GetCollider()
+	{
+		if (!_collider)
+			_collider = GetComponent<Collider>();
+		return _collider;
+	}
+
 	void Start()
 	{
-		gameObject.SetActive(active);
-		if (active)
+		gameObject.SetActive(Active);
+		if (Active)
 		{
-			rigidBody = GetComponent<Rigidbody>();
-			myTransform = transform;
-			animator = myTransform.FindChild("PlayerModel").GetComponent<Animator>();
+			_rigidBody = GetComponent<Rigidbody>();
+			_myTransform = transform;
+			_animator = _myTransform.FindChild("PlayerModel").GetComponent<Animator>();
 		}
 	}
 
@@ -35,21 +45,27 @@ public class PlayerController : MonoBehaviour
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (!dead && other.CompareTag("Explosion"))
+		if (CanDie && !Dead && other.CompareTag("Explosion"))
 		{
-			Debug.Log("P" + playerNumber + " hit by explosion!");
-			dead = true;
-			GlobalManager.PlayerDied(playerNumber);
+			Debug.Log("P" + PlayerNumber + " hit by explosion!");
+			Dead = true;
+			GlobalManager.PlayerDied(PlayerNumber);
 			Destroy(gameObject);
 		}
 	}
 
 	void UpdateMovement()
 	{
-		animator.SetBool("Walking", false);
+		_animator.SetBool("Walking", false);
 
-		if (canMove)
-			UpdatePlayerMovement(playerNumber);
+		if (CanMove)
+			UpdatePlayerMovement(PlayerNumber);
+
+		if (_recentBomb && !Intersects(_recentBomb))
+		{
+			_recentBomb.AddComponent<SphereCollider>();
+			_recentBomb = null;
+		}
 	}
 
 	private void UpdatePlayerMovement(int playerNumber)
@@ -60,33 +76,33 @@ public class PlayerController : MonoBehaviour
 
 		if (Input.GetKey(KeyCode.W) || rotation == -1)
 		{ //move up
-			rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y, moveSpeed);
-			myTransform.rotation = Quaternion.Euler(0, 0, 0);
-			animator.SetBool("Walking", true);
+			_rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, MoveSpeed);
+			_myTransform.rotation = Quaternion.Euler(0, 0, 0);
+			_animator.SetBool("Walking", true);
 		}
 
 		if (Input.GetKey(KeyCode.A) || translation == -1)
 		{ //move down
-			rigidBody.velocity = new Vector3(-moveSpeed, rigidBody.velocity.y, rigidBody.velocity.z);
-			myTransform.rotation = Quaternion.Euler(0, 270, 0);
-			animator.SetBool("Walking", true);
+			_rigidBody.velocity = new Vector3(-MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
+			_myTransform.rotation = Quaternion.Euler(0, 270, 0);
+			_animator.SetBool("Walking", true);
 		}
 
 		if (Input.GetKey(KeyCode.S) || rotation == 1)
 		{ //move left
-			rigidBody.velocity = new Vector3(rigidBody.velocity.x, rigidBody.velocity.y, -moveSpeed);
-			myTransform.rotation = Quaternion.Euler(0, 180, 0);
-			animator.SetBool("Walking", true);
+			_rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, -MoveSpeed);
+			_myTransform.rotation = Quaternion.Euler(0, 180, 0);
+			_animator.SetBool("Walking", true);
 		}
 
 		if (Input.GetKey(KeyCode.D) || translation == 1)
 		{ //move right
-			rigidBody.velocity = new Vector3(moveSpeed, rigidBody.velocity.y, rigidBody.velocity.z);
-			myTransform.rotation = Quaternion.Euler(0, 90, 0);
-			animator.SetBool("Walking", true);
+			_rigidBody.velocity = new Vector3(MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
+			_myTransform.rotation = Quaternion.Euler(0, 90, 0);
+			_animator.SetBool("Walking", true);
 		}
 
-		if (canDropBombs && (Input.GetKeyDown(KeyCode.Space) || IsButtonPressed(0, playerNumber)))
+		if (CanDropBombs && (Input.GetKeyDown(KeyCode.Space) || IsButtonPressed(0, playerNumber)))
 		{
 			DropBomb();
 		}
@@ -94,12 +110,16 @@ public class PlayerController : MonoBehaviour
 
 	void DropBomb()
 	{
-		if (bombPrefab)
+		if (BombPrefab)
 		{
-			Vector3 position = new Vector3(Mathf.RoundToInt(myTransform.position.x), 0.5f, Mathf.RoundToInt(myTransform.position.z));
-			GameObject recentBomb = Instantiate(bombPrefab, position, bombPrefab.transform.rotation);
-			recentBomb.AddComponent<SphereCollider>();
+			Vector3 position = new Vector3(Mathf.RoundToInt(_myTransform.position.x), 0.5f, Mathf.RoundToInt(_myTransform.position.z));
+			_recentBomb = Instantiate(BombPrefab, position, BombPrefab.transform.rotation);
 		}
+	}
+
+	bool Intersects(GameObject gameObject)
+	{
+		return GetCollider().bounds.Intersects(gameObject.GetComponent<Renderer>().bounds);
 	}
 
 	bool IsButtonPressed(int button, int playerNumber)

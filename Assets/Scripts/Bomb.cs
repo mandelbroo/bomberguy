@@ -38,7 +38,7 @@ public class Bomb : MonoBehaviour {
 
 	}
 
-	void Explode()
+	public void Explode()
 	{
 		if (!explode) return;
 
