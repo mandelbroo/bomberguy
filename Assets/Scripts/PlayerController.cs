@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
 		{
 			Vector3 position = new Vector3(Mathf.RoundToInt(myTransform.position.x), 0.5f, Mathf.RoundToInt(myTransform.position.z));
 			GameObject recentBomb = Instantiate(bombPrefab, position, bombPrefab.transform.rotation);
+			recentBomb.AddComponent<SphereCollider>();
 		}
 	}
 
