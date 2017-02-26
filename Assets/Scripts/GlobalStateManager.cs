@@ -2,27 +2,28 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GlobalStateManager : MonoBehaviour
 {
 	public List<GameObject> Players = new List<GameObject>();
 
-	private int deadPlayers = 0;
-	private int deadPlayerNumber = -1;
+	private List<int> _deadPlayers;
+	private int _playerCount = 4;
 
-	public void PlayerDied(int playerNumber)
-	{
-		deadPlayers++;
-
-		if (deadPlayers == 1)
-		{
-			deadPlayerNumber = playerNumber;
-			Invoke("CheckPlayersDeath", .3f);
-		}
+	public void Start() {
+		_deadPlayers = new List<int>();
 	}
 
-	void CheckPlayersDeath()
-	{
-		// todo
+	public void PlayerDied(int playerNumber) {
+		_deadPlayers.Add(playerNumber);
+		Invoke("CheckPlayersDeath", .3f);
+	}
+
+	void CheckPlayersDeath() {
+		if (_deadPlayers.Count >= _playerCount)
+			Debug.Log("Draw");
+		else if (_deadPlayers.Count == _playerCount - 1)
+			Debug.Log("Player " + (10 - _deadPlayers.Sum(i => i)) + " Win!");
 	}
 }
