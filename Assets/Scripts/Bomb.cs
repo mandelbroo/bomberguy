@@ -6,25 +6,26 @@ public class Bomb : MonoBehaviour {
 
 	public GameObject explosionPrefab;
 	public LayerMask levelMask;
-	public bool explode = true;
+	public bool CanExplode = true;
+	[Range(2, 15)]
+	public int Range;
 	private bool _exploded = false;
 
 	void Start () {
 		Invoke("Explode", 3f);
 	}
-	
+
 	void Update () {
-		
+
 	}
 
 	private IEnumerator CreateExplosions(Vector3 direction)
 	{
-		for (int i = 1; i < 3; i++)
+		for (int i = 1; i < Range; i++)
 		{ //The 3 here dictates how far the raycasts will check, in this case 3 tiles far
 			RaycastHit hit; //Holds all information about what the raycast hits
-
-			Physics.Raycast(transform.position + new Vector3(0, .5f, 0), direction, out hit, i, levelMask); //Raycast in the specified direction at i distance, because of the layer mask it'll only hit blocks, not players or bombs
-
+			Physics.Raycast(transform.position + new Vector3(0, .3f, 0), direction, out hit, i, levelMask);
+			//Raycast in the specified direction at i distance, because of the layer mask it'll only hit blocks, not players or bombs
 			if (!hit.collider)
 			{ // Free space, make a new explosion
 				Instantiate(explosionPrefab, transform.position + (i * direction), explosionPrefab.transform.rotation);
@@ -40,7 +41,7 @@ public class Bomb : MonoBehaviour {
 
 	public void Explode()
 	{
-		if (!explode) return;
+		if (!CanExplode) return;
 
 		Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
