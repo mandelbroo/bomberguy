@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class Player : MonoBehaviour
 {
 	[Range(1, 8)] //Enables a nifty slider in the editor
 	public int PlayerNumber = 1;
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
 	private void UpdatePlayerMovement(int playerNumber)
 	{
-		
+
 		float translation = Input.GetAxis("Joy" + playerNumber + "X");
 		float rotation = Input.GetAxis("Joy" + playerNumber + "Y");
 
@@ -112,8 +112,10 @@ public class PlayerController : MonoBehaviour
 	{
 		if (BombPrefab)
 		{
-			Vector3 position = new Vector3(Mathf.RoundToInt(_myTransform.position.x), 0.5f, Mathf.RoundToInt(_myTransform.position.z));
+			Vector3 position = new Vector3(Mathf.RoundToInt(_myTransform.position.x), 0.3f, Mathf.RoundToInt(_myTransform.position.z));
 			_recentBomb = Instantiate(BombPrefab, position, BombPrefab.transform.rotation);
+
+			Debug.Log("bomb placed in: " + _recentBomb.transform.position);
 		}
 	}
 
