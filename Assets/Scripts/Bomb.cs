@@ -4,46 +4,38 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour {
 
-	public GameObject explosionPrefab;
-	public LayerMask levelMask;
+	public GameObject ExplosionPrefab;
+	public LayerMask LevelMask;
 	public bool CanExplode = true;
 	[Range(2, 15)]
 	public int Range;
-	private bool _exploded = false;
+	private bool _exploded;
+	private Collider _collider;
 
 	void Start () {
 		Invoke("Explode", 3f);
+		_collider = transform.FindChild("Collider").GetComponent<Collider>();
 	}
 
-	void Update () {
+	private IEnumerator CreateExplosions(Vector3 direction) {
+		for (int i = 1; i < Range; i++) {
+			RaycastHit hit;
+			Physics.Raycast(transform.position, direction, out hit, i, LevelMask);
 
-	}
-
-	private IEnumerator CreateExplosions(Vector3 direction)
-	{
-		for (int i = 1; i < Range; i++)
-		{ //The 3 here dictates how far the raycasts will check, in this case 3 tiles far
-			RaycastHit hit; //Holds all information about what the raycast hits
-			Physics.Raycast(transform.position + new Vector3(0, .3f, 0), direction, out hit, i, levelMask);
-			//Raycast in the specified direction at i distance, because of the layer mask it'll only hit blocks, not players or bombs
-			if (!hit.collider)
-			{ // Free space, make a new explosion
-				Instantiate(explosionPrefab, transform.position + (i * direction), explosionPrefab.transform.rotation);
+			if (!hit.collider) {
+				Instantiate(ExplosionPrefab, transform.position + (i * direction), ExplosionPrefab.transform.rotation);
 			}
-			else
-			{ //Hit a block, stop spawning in this direction
+			else {//Hit a block, stop spawning in this direction
 				break;
 			}
 			yield return new WaitForSeconds(.05f); //Wait 50 milliseconds before checking the next location
 		}
-
 	}
 
-	public void Explode()
-	{
+	public void Explode() {
 		if (!CanExplode) return;
-
-		Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+		
+		Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
 
 		StartCoroutine(CreateExplosions(Vector3.forward));
 		StartCoroutine(CreateExplosions(Vector3.right));
@@ -52,16 +44,12 @@ public class Bomb : MonoBehaviour {
 
 		GetComponent<MeshRenderer>().enabled = false;
 		_exploded = true;
-		Transform collider = transform.FindChild("Collider");
-		if (collider)
-			collider.gameObject.SetActive(false);
+		_collider.gameObject.SetActive(false);
 		Destroy(gameObject, .3f);
 	}
 
-	public void OnTriggerEnter(Collider other)
-	{
-		if (!_exploded && other.CompareTag("Explosion"))
-		{
+	public void OnTriggerEnter(Collider other) {
+		if (!_exploded && other.CompareTag("Explosion") && _collider.bounds.Intersects(other.bounds)) {
 			CancelInvoke("Explode");
 			Explode();
 		}
