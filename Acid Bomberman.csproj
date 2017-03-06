@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\GameBrain.cs" />
     <Compile Include="Assets\Scripts\GlobalStateManager.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\UI\Menu.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
