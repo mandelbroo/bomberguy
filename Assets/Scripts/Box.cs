@@ -5,22 +5,15 @@ using UnityEngine;
 public class Box : MonoBehaviour {
 
 	public bool Destroyed = false;
-	// Use this for initialization
-	void Start () {
+	public GameObject Item;
 
-	}
-
-	// Update is called once per frame
-	void Update () {
-
-	}
-
-	public void OnTriggerEnter(Collider other)
-	{
-		if (!Destroyed && other.CompareTag("Explosion"))
-		{
+	public void OnTriggerEnter(Collider other) {
+		if (!Destroyed && other.CompareTag("Explosion")) {
 			Destroyed = true;
 			Destroy(gameObject);
+			if (Item != null) {
+				Instantiate(Item, transform.position, Quaternion.identity);
+			}
 		}
 	}
 }

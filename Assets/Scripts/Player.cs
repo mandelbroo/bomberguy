@@ -12,7 +12,8 @@ public class Player : MonoBehaviour
 	public bool Active = true;
 	public bool Dead;
 	public GameObject BombPrefab;
-	public GlobalStateManager GlobalManager;
+	public GlobalStateManager GlobalManager; 
+	public int FireRange = 2;
 
 	private Animator _animator;
 	private Collider _collider;
@@ -20,42 +21,42 @@ public class Player : MonoBehaviour
 	private GameObject _recentBomb;
 	private Rigidbody _rigidBody;
 
-	public Collider GetCollider()
-	{
+	public Collider GetCollider() {
 		if (!_collider)
 			_collider = GetComponent<Collider>();
 		return _collider;
 	}
 
-	void Start()
-	{
+	void Start() {
 		gameObject.SetActive(Active);
-		if (Active)
-		{
+		if (Active) {
 			_rigidBody = GetComponent<Rigidbody>();
 			_myTransform = transform;
 			_animator = _myTransform.FindChild("PlayerModel").GetComponent<Animator>();
 		}
 	}
 
-	void Update()
-	{
+	void Update() {
 		UpdateMovement();
 	}
 
-	public void OnTriggerEnter(Collider other)
-	{
-		if (CanDie && !Dead && other.CompareTag("Explosion"))
-		{
+	public void OnTriggerEnter(Collider other) {
+		if (CanDie && !Dead && other.CompareTag("Explosion")) {
 			Debug.Log("P" + PlayerNumber + " hit by explosion!");
 			Dead = true;
 			GlobalManager.PlayerDied(PlayerNumber);
 			Destroy(gameObject);
 		}
+		else if (other.CompareTag("Item")) {
+			Destroy(other.gameObject);
+
+			if (other.gameObject.GetComponent<ItemCollectible>().Type == ItemCollectible.Types.Fire) {
+				FireRange++;
+			}
+		}
 	}
 
-	void UpdateMovement()
-	{
+	void UpdateMovement() {
 		_animator.SetBool("Walking", false);
 
 		if (CanMove)
@@ -68,64 +69,53 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	private void UpdatePlayerMovement(int playerNumber)
-	{
+	private void UpdatePlayerMovement(int playerNumber) {
 
 		float translation = Input.GetAxis("Joy" + playerNumber + "X");
 		float rotation = Input.GetAxis("Joy" + playerNumber + "Y");
 
-		if (Input.GetKey(KeyCode.W) || rotation == -1)
-		{ //move up
+		if (Input.GetKey(KeyCode.W) || rotation == -1) { //move up
 			_rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, MoveSpeed);
 			_myTransform.rotation = Quaternion.Euler(0, 0, 0);
 			_animator.SetBool("Walking", true);
 		}
 
-		if (Input.GetKey(KeyCode.A) || translation == -1)
-		{ //move down
+		if (Input.GetKey(KeyCode.A) || translation == -1) { //move down
 			_rigidBody.velocity = new Vector3(-MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
 			_myTransform.rotation = Quaternion.Euler(0, 270, 0);
 			_animator.SetBool("Walking", true);
 		}
 
-		if (Input.GetKey(KeyCode.S) || rotation == 1)
-		{ //move left
+		if (Input.GetKey(KeyCode.S) || rotation == 1) { //move left
 			_rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, -MoveSpeed);
 			_myTransform.rotation = Quaternion.Euler(0, 180, 0);
 			_animator.SetBool("Walking", true);
 		}
 
-		if (Input.GetKey(KeyCode.D) || translation == 1)
-		{ //move right
+		if (Input.GetKey(KeyCode.D) || translation == 1) { //move right
 			_rigidBody.velocity = new Vector3(MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
 			_myTransform.rotation = Quaternion.Euler(0, 90, 0);
 			_animator.SetBool("Walking", true);
 		}
 
-		if (CanDropBombs && (Input.GetKeyDown(KeyCode.Space) || IsButtonPressed(0, playerNumber)))
-		{
+		if (CanDropBombs && (Input.GetKeyDown(KeyCode.Space) || IsButtonPressed(0, playerNumber))) {
 			DropBomb();
 		}
 	}
 
-	void DropBomb()
-	{
-		if (BombPrefab)
-		{
+	void DropBomb() {
+		if (BombPrefab) {
 			Vector3 position = new Vector3(Mathf.RoundToInt(_myTransform.position.x), 0.3f, Mathf.RoundToInt(_myTransform.position.z));
 			_recentBomb = Instantiate(BombPrefab, position, BombPrefab.transform.rotation);
-
-			Debug.Log("bomb placed in: " + _recentBomb.transform.position);
+			_recentBomb.GetComponent<Bomb>().Range = FireRange;
 		}
 	}
 
-	bool Intersects(GameObject gameObject)
-	{
+	bool Intersects(GameObject gameObject) {
 		return GetCollider().bounds.Intersects(gameObject.GetComponent<Renderer>().bounds);
 	}
 
-	bool IsButtonPressed(int button, int playerNumber)
-	{
+	bool IsButtonPressed(int button, int playerNumber) {
 		KeyCode enumValue = (KeyCode) Enum.Parse(typeof(KeyCode), "Joystick" + playerNumber + "Button" + button);
 		return Input.GetKeyDown(enumValue);
 	}
