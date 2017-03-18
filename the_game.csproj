@@ -79,7 +79,6 @@
     <Compile Include="Assets\Scripts\Box.cs" />
     <Compile Include="Assets\Scripts\DestroySelf.cs" />
     <Compile Include="Assets\Scripts\DisableTriggerOnPlayerExit.cs" />
-    <Compile Include="Assets\Scripts\GameBrain.cs" />
     <Compile Include="Assets\Scripts\GlobalStateManager.cs" />
     <Compile Include="Assets\Scripts\ItemCollectible.cs" />
     <Compile Include="Assets\Scripts\ItemManager.cs" />

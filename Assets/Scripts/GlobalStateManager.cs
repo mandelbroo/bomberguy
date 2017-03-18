@@ -61,7 +61,7 @@ public class GlobalStateManager : MonoBehaviour
 	private bool TrueOrFalse() {
 		if (_rand == null)
 			_rand = new System.Random();
-		return _rand.Next(9) % 2 == 0;
+		return _rand.Next(9) % 2 == 0 || _rand.Next(9) % 5 == 0;
 	}
 
 	private System.Random _rand;
