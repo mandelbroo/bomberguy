@@ -46,8 +46,7 @@ public class GlobalStateManager : MonoBehaviour
 		for (var i = 0; i < 15; i++)
 			for (var x = 0; x < 11; x++)
 				if ((x % 2 == 0 || i % 2 == 0) && TrueOrFalse()) {
-					var box = Instantiate(prefab, new Vector3(i, 0.5f, -x), Quaternion.identity);
-
+					var box = Instantiate(prefab, new Vector3(i, 0.7f, -x), Quaternion.identity);
 					var randCondition = _rand.Next(300) % 13 == 0;
 					if (fireCount != FireCount && randCondition) {
 						fireCount++;

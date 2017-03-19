@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour {
@@ -8,7 +8,7 @@ public class Bomb : MonoBehaviour {
 	public LayerMask LevelMask;
 	public bool CanExplode = true;
 	[Range(2, 15)]
-	public int Range;
+	public int FireRadius;
 	private bool _exploded;
 	private Collider _collider;
 
@@ -18,29 +18,55 @@ public class Bomb : MonoBehaviour {
 	}
 
 	private IEnumerator CreateExplosions(Vector3 direction) {
-		for (int i = 1; i < Range; i++) {
+		var boxHit = false;
+		var leave = false;
+		for (int i = 1; i < FireRadius; i++) {
 			RaycastHit hit;
-			Physics.Raycast(transform.position, direction, out hit, i, LevelMask);
+			Vector3 position = transform.position + (i * direction);
+			Physics.Raycast(transform.position, direction, out hit, i, LevelMask, QueryTriggerInteraction.Ignore);
 
-			if (!hit.collider) {
-				Instantiate(ExplosionPrefab, transform.position + (i * direction), ExplosionPrefab.transform.rotation);
+			if (hit.collider) {
+				switch (hit.collider.tag) {
+					case "Bomb":
+						var bomb = hit.collider.GetComponent<Bomb>();
+						bomb.SelfDestroy(Opposite(direction));
+						boxHit = true;
+						break;
+					case "Box":
+						var box = hit.collider.gameObject.GetComponent<Box>();
+						box.SelfDestroy();
+						boxHit = true;
+						break;
+					case "Wall":
+						leave = true;
+						break;
+				}
+				if (leave) break;
 			}
-			else {//Hit a block, stop spawning in this direction
-				break;
-			}
+			Instantiate(ExplosionPrefab, position, ExplosionPrefab.transform.rotation);
+			if (boxHit) break;
 			yield return new WaitForSeconds(.05f); //Wait 50 milliseconds before checking the next location
 		}
 	}
 
 	public void Explode() {
-		if (!CanExplode) return;
-		
+		SelfDestroy();
+	}
+
+	public void SelfDestroy(Vector3? ignoredDirection = null) {
+		if (!CanExplode || _exploded) return;
+		CancelInvoke("Explode");
+
 		Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
 
-		StartCoroutine(CreateExplosions(Vector3.forward));
-		StartCoroutine(CreateExplosions(Vector3.right));
-		StartCoroutine(CreateExplosions(Vector3.back));
-		StartCoroutine(CreateExplosions(Vector3.left));
+		if (!ignoredDirection.HasValue || ignoredDirection.Value != Vector3.forward)
+			StartCoroutine(CreateExplosions(Vector3.forward));
+		if (!ignoredDirection.HasValue || ignoredDirection != Vector3.right)
+			StartCoroutine(CreateExplosions(Vector3.right));
+		if (!ignoredDirection.HasValue || ignoredDirection != Vector3.back)
+			StartCoroutine(CreateExplosions(Vector3.back));
+		if (!ignoredDirection.HasValue || ignoredDirection != Vector3.left)
+			StartCoroutine(CreateExplosions(Vector3.left));
 
 		GetComponent<MeshRenderer>().enabled = false;
 		_exploded = true;
@@ -48,10 +74,15 @@ public class Bomb : MonoBehaviour {
 		Destroy(gameObject, .3f);
 	}
 
-	public void OnTriggerEnter(Collider other) {
-		if (!_exploded && other.CompareTag("Explosion") && _collider.bounds.Intersects(other.bounds)) {
-			CancelInvoke("Explode");
-			Explode();
-		}
+	public static Vector3 Opposite(Vector3 direction) {
+		if (direction == Vector3.back)
+			return Vector3.forward;
+		if (direction == Vector3.forward)
+			return Vector3.back;
+		if (direction == Vector3.left)
+			return Vector3.right;
+		if (direction == Vector3.right)
+			return Vector3.left;
+		throw new Exception("Unsupported direction: " + direction);
 	}
 }

@@ -12,8 +12,9 @@ public class Player : MonoBehaviour
 	public bool Active = true;
 	public bool Dead;
 	public GameObject BombPrefab;
-	public GlobalStateManager GlobalManager; 
-	public int FireRange = 2;
+	public GlobalStateManager GlobalManager;
+	[Range(2, 20)]
+	public int FireRadius = 2;
 
 	private Animator _animator;
 	private Collider _collider;
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
 			Destroy(other.gameObject);
 
 			if (other.gameObject.GetComponent<ItemCollectible>().Type == ItemCollectible.Types.Fire) {
-				FireRange++;
+				FireRadius++;
 			}
 		}
 	}
@@ -107,7 +108,7 @@ public class Player : MonoBehaviour
 		if (BombPrefab) {
 			Vector3 position = new Vector3(Mathf.RoundToInt(_myTransform.position.x), 0.3f, Mathf.RoundToInt(_myTransform.position.z));
 			_recentBomb = Instantiate(BombPrefab, position, BombPrefab.transform.rotation);
-			_recentBomb.GetComponent<Bomb>().Range = FireRange;
+			_recentBomb.GetComponent<Bomb>().FireRadius = FireRadius;
 		}
 	}
 

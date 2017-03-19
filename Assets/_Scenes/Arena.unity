@@ -118,7 +118,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &22654732
 MonoBehaviour:
@@ -246,7 +246,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 79.758, y: 0, z: 0}
 --- !u!1 &60279847
 GameObject:
@@ -421,7 +421,7 @@ RectTransform:
   m_Children:
   - {fileID: 764517453}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1042,7 +1042,7 @@ MonoBehaviour:
   Dead: 0
   BombPrefab: {fileID: 1755833757950886, guid: 11301a0767976a84ba6aa94f2fc7c91c, type: 2}
   GlobalManager: {fileID: 22654732}
-  FireRange: 2
+  FireRadius: 2
 --- !u!54 &296729715
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2344,7 +2344,7 @@ Transform:
   - {fileID: 216033038}
   - {fileID: 210548055}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &682687981
 GameObject:
@@ -2570,7 +2570,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &750049466
 GameObject:
@@ -3370,46 +3370,6 @@ Transform:
   m_Father: {fileID: 851693779}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1021542131
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1021542133}
-  - component: {fileID: 1021542132}
-  m_Layer: 0
-  m_Name: GameBrain
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1021542132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1021542131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d636bd69c08687740b1a045443c3f584, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1021542133
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1021542131}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 0, z: -5.51}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1026371922
 GameObject:
   m_ObjectHideFlags: 0
@@ -3577,7 +3537,7 @@ MonoBehaviour:
   Dead: 0
   BombPrefab: {fileID: 1755833757950886, guid: 11301a0767976a84ba6aa94f2fc7c91c, type: 2}
   GlobalManager: {fileID: 22654732}
-  FireRange: 2
+  FireRadius: 5
 --- !u!54 &1070674569
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4437,7 +4397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1338057886
 Transform:
   m_ObjectHideFlags: 0
@@ -4487,7 +4447,7 @@ MonoBehaviour:
   Dead: 0
   BombPrefab: {fileID: 1755833757950886, guid: 11301a0767976a84ba6aa94f2fc7c91c, type: 2}
   GlobalManager: {fileID: 22654732}
-  FireRange: 2
+  FireRadius: 2
 --- !u!54 &1338057889
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6086,7 +6046,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1772567577
 Transform:
   m_ObjectHideFlags: 0
@@ -6136,7 +6096,7 @@ MonoBehaviour:
   Dead: 0
   BombPrefab: {fileID: 1755833757950886, guid: 11301a0767976a84ba6aa94f2fc7c91c, type: 2}
   GlobalManager: {fileID: 22654732}
-  FireRange: 2
+  FireRadius: 2
 --- !u!54 &1772567580
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6190,7 +6150,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1784219997}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Borders
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -6212,7 +6172,7 @@ Transform:
   - {fileID: 1480967445}
   - {fileID: 1610086832}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1810914782
 GameObject:
@@ -6627,7 +6587,7 @@ Transform:
   m_Children:
   - {fileID: 2021768203}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1921774113
 GameObject:
@@ -6665,7 +6625,7 @@ MonoBehaviour:
   Dead: 0
   BombPrefab: {fileID: 0}
   GlobalManager: {fileID: 22654732}
-  FireRange: 2
+  FireRadius: 2
 --- !u!4 &1921774115
 Transform:
   m_ObjectHideFlags: 0
@@ -6682,7 +6642,7 @@ Transform:
   - {fileID: 1772567577}
   - {fileID: 296729712}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1929327877
 GameObject:
@@ -6822,7 +6782,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 59.006004, y: -139.63301, z: 313.626}
 --- !u!1 &1975142110
 GameObject:
@@ -7351,7 +7311,7 @@ MonoBehaviour:
   Dead: 0
   BombPrefab: {fileID: 1755833757950886, guid: 11301a0767976a84ba6aa94f2fc7c91c, type: 2}
   GlobalManager: {fileID: 22654732}
-  FireRange: 2
+  FireRadius: 2
 --- !u!54 &2135731563
 Rigidbody:
   m_ObjectHideFlags: 0
