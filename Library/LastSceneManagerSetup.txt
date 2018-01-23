@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/_Scenes/Arena.unity
-  isLoaded: 1
-  isActive: 1
