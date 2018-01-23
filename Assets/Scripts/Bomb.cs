@@ -14,7 +14,7 @@ public class Bomb : MonoBehaviour {
 
 	void Start () {
 		Invoke("Explode", 3f);
-		_collider = transform.FindChild("Collider").GetComponent<Collider>();
+		_collider = transform.Find("Collider").GetComponent<Collider>();
 	}
 
 	private IEnumerator CreateExplosions(Vector3 direction) {

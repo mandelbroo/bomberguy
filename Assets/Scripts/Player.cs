@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
 		if (Active) {
 			_rigidBody = GetComponent<Rigidbody>();
 			_myTransform = transform;
-			_animator = _myTransform.FindChild("PlayerModel").GetComponent<Animator>();
+			_animator = _myTransform.Find("PlayerModel").GetComponent<Animator>();
 		}
 	}
 
