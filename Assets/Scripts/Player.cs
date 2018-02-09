@@ -16,6 +16,9 @@ public class Player : MonoBehaviour
 	[Range(2, 20)]
 	public int FireRadius = 2;
 
+	public float xForce = 3500f;
+	public float yForce = 3500f;
+
 	private Animator _animator;
 	private Collider _collider;
 	private Transform _myTransform;
@@ -76,26 +79,30 @@ public class Player : MonoBehaviour
 		float rotation = Input.GetAxis("Joy" + playerNumber + "Y");
 
 		if (Input.GetKey(KeyCode.W) || rotation == -1) { //move up
-			_rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, MoveSpeed);
+			// _rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, MoveSpeed);
 			_myTransform.rotation = Quaternion.Euler(0, 0, 0);
+			_rigidBody.AddForce(0, 0, yForce * Time.deltaTime);
 			_animator.SetBool("Walking", true);
 		}
 
 		if (Input.GetKey(KeyCode.A) || translation == -1) { //move down
-			_rigidBody.velocity = new Vector3(-MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
+			// _rigidBody.velocity = new Vector3(-MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
 			_myTransform.rotation = Quaternion.Euler(0, 270, 0);
+			_rigidBody.AddForce(-xForce * Time.deltaTime, 0, 0);
 			_animator.SetBool("Walking", true);
 		}
 
 		if (Input.GetKey(KeyCode.S) || rotation == 1) { //move left
-			_rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, -MoveSpeed);
+			// _rigidBody.velocity = new Vector3(_rigidBody.velocity.x, _rigidBody.velocity.y, -MoveSpeed);
 			_myTransform.rotation = Quaternion.Euler(0, 180, 0);
+			_rigidBody.AddForce(0, 0, -yForce * Time.deltaTime);
 			_animator.SetBool("Walking", true);
 		}
 
 		if (Input.GetKey(KeyCode.D) || translation == 1) { //move right
-			_rigidBody.velocity = new Vector3(MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
+			// _rigidBody.velocity = new Vector3(MoveSpeed, _rigidBody.velocity.y, _rigidBody.velocity.z);
 			_myTransform.rotation = Quaternion.Euler(0, 90, 0);
+			_rigidBody.AddForce(xForce * Time.deltaTime, 0, 0);
 			_animator.SetBool("Walking", true);
 		}
 
